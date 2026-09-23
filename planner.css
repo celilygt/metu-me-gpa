@@ -1,0 +1,730 @@
+/* The semester board is the primary workspace. All surfaces stay cream. */
+@media (min-width: 851px) {
+  :root {
+    --sidebar-width: 216px;
+  }
+  .sidebar {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .nav-item {
+    font-size: 12px;
+  }
+  .topbar {
+    min-height: 64px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+#main.planner-main {
+  max-width: 1540px;
+  padding: 26px 30px 24px;
+}
+.planner-workspace {
+  min-width: 0;
+}
+.planner-workspace .page-heading {
+  margin-bottom: 18px;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: nowrap;
+}
+.planner-workspace .page-heading h1 {
+  font-size: 30px;
+  letter-spacing: -0.035em;
+}
+.planner-workspace .page-heading p {
+  margin-top: 5px;
+  font-size: 13px;
+}
+.planner-workspace .heading-actions {
+  padding: 0;
+}
+.planner-scenario-bar,
+.planner-scenario-select,
+.planner-scenario-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.planner-scenario-bar {
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.planner-scenario-select {
+  flex: 1;
+}
+.planner-scenario-select .scenario-picker {
+  max-width: 370px;
+  min-width: 190px;
+  flex: 1;
+  border-color: var(--line);
+  background: var(--surface);
+}
+.planner-scenario-select .scenario-picker select {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary);
+}
+.planner-scenario-actions .button {
+  padding: 8px 12px;
+}
+.planner-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.planner-summary > div {
+  padding: 15px 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  border-right: 1px solid var(--line);
+}
+.planner-summary > div:last-child {
+  border-right: 0;
+}
+.planner-summary > div > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.planner-summary strong {
+  font-size: 29px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+.planner-summary small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.planner-summary strong > small {
+  display: inline;
+  font-weight: 400;
+  font-size: 11px;
+  white-space: nowrap;
+}
+.planner-summary .planner-projection {
+  background: #f1e5df;
+}
+.planner-projection > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.planner-projection b {
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 550;
+  background: #e5d2cc;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-variant-numeric: tabular-nums;
+}
+.planner-start {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0 16px;
+  margin-top: -9px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.planner-start > span {
+  flex: 1;
+}
+.planner-start .subtle-link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+}
+.planner-start .icon {
+  width: 15px;
+}
+.planner-tools,
+.planner-fill-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.planner-tools {
+  margin-bottom: 12px;
+}
+.planner-workspace .segmented {
+  padding: 3px;
+  border-color: var(--line);
+  background: #eee5d9;
+}
+.planner-workspace .segmented button {
+  min-height: 38px;
+  padding: 7px 14px;
+  font-size: 12px;
+}
+.planner-workspace .segmented button.active {
+  color: var(--primary);
+  background: var(--surface);
+  box-shadow: 0 1px 3px #392b3010;
+}
+.planner-fill-actions .button {
+  font-size: 12px;
+  min-height: 44px;
+  padding: 8px 14px;
+}
+.planner-workspace > .table-toolbar {
+  padding: 0;
+  border: 0;
+  margin: 0 0 7px;
+  gap: 12px;
+}
+.planner-workspace > .table-toolbar .search-box {
+  flex: 1;
+  width: auto;
+  max-width: none;
+  background: var(--surface);
+}
+.planner-workspace .search-box input {
+  font-size: 12px;
+}
+.planner-workspace .filter-controls select {
+  font-size: 11px;
+  background: var(--surface);
+}
+.planner-board-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  min-height: 42px;
+}
+.planner-board-caption .checkbox-label {
+  margin: 0;
+  font-size: 11px;
+  min-height: 44px;
+}
+.planner-board-caption input {
+  width: 15px;
+  height: 15px;
+}
+.planner-workspace .semester-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  align-items: start;
+}
+.planner-workspace .semester-card {
+  background: #f0e8dc;
+  border: 1px solid #ded2c1;
+  border-radius: 12px;
+  box-shadow: none;
+}
+.planner-workspace .semester-card.current-semester {
+  border-color: #b7808b;
+}
+.planner-workspace .semester-card.drop-target {
+  border-color: var(--primary);
+  outline: 2px dashed var(--primary);
+  outline-offset: -2px;
+  background: #ecdcd3;
+  box-shadow: 0 0 0 4px #762b4310;
+}
+.planner-workspace .semester-header {
+  padding: 17px 17px 12px;
+  align-items: center;
+  background: transparent;
+  border-bottom: 0;
+  flex-wrap: nowrap;
+}
+.planner-workspace .current-semester .semester-header {
+  background: #eedfd5;
+}
+.semester-year {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.planner-workspace .semester-header h3 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+.planner-workspace .semester-header .mini-badge {
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--primary);
+  border-color: #d2afa9;
+  background: #f9efe5;
+}
+.planner-workspace .semester-load {
+  margin: 0;
+  font-size: 10px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.planner-workspace .semester-metrics {
+  padding: 9px 17px 12px;
+  gap: 9px 16px;
+  font-size: 10px;
+  background: transparent;
+  border-bottom: 1px solid #ded2c1;
+}
+.planner-workspace .semester-metrics span {
+  gap: 5px;
+}
+.planner-workspace .semester-metrics strong {
+  font-size: 12px;
+}
+.planner-workspace .semester-course-list {
+  padding: 9px;
+  gap: 7px;
+  min-height: 122px;
+}
+.planner-workspace .semester-course {
+  padding: 11px 12px 0;
+  background: var(--surface);
+  border: 1px solid #e3d8c9;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px #392b3005;
+}
+.planner-workspace .semester-course:hover {
+  border-color: #bb9198;
+  box-shadow: 0 2px 5px #762b4308;
+}
+.planner-workspace .semester-course.dragging {
+  opacity: 0.45;
+}
+.planner-course-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) 76px;
+  align-items: center;
+  gap: 9px;
+}
+.planner-workspace .drag-handle {
+  font-size: 15px;
+  opacity: 0.55;
+}
+.planner-course-info {
+  min-width: 0;
+}
+.planner-course-code {
+  display: block;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.7;
+  color: var(--primary);
+  text-align: left;
+  border-radius: 2px;
+}
+.planner-course-code:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.planner-course-meta {
+  display: block;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.planner-course-info p {
+  font-size: 11px;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+.planner-workspace .planner-course-grade .grade-select {
+  width: 76px;
+  min-width: 76px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 8px 7px;
+  background: #f6f0e6;
+  color: var(--primary);
+  border-color: #d9c8bd;
+}
+.planner-course-grade .probability-chip {
+  width: 76px;
+  min-height: 44px;
+  padding: 4px;
+  display: block;
+  line-height: 1.3;
+  font-size: 9px;
+  text-align: center;
+}
+.planner-course-grade .probability-chip strong {
+  font-size: 14px;
+}
+.planner-course-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid #eee5d9;
+  margin-top: 9px;
+}
+.planner-course-footer .subtle-link {
+  min-height: 44px;
+  font-size: 10px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+}
+.planner-course-footer .subtle-link:hover {
+  color: var(--primary);
+}
+.planner-course-footer .icon {
+  width: 12px;
+  height: 12px;
+}
+.planner-course-footer .move-label {
+  margin: 0;
+}
+.planner-course-footer .move-label select {
+  border: 0;
+  min-height: 44px;
+  padding: 5px 4px;
+  font-size: 10px;
+  width: 95px;
+  background: transparent;
+  color: var(--muted);
+  text-align: right;
+  cursor: pointer;
+}
+.planner-workspace .recorded-course {
+  background: #f7f0e5;
+}
+.planner-workspace .semester-empty {
+  min-height: 100px;
+  display: grid;
+  place-items: center;
+  padding: 20px 10px;
+  background: transparent;
+  border: 1px dashed #cdbdab;
+  color: var(--muted);
+  font-size: 12px;
+}
+.planner-uncertainty {
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+.planner-uncertainty summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-size: 12px;
+  min-height: 28px;
+}
+.planner-uncertainty .probability-summary {
+  margin-top: 15px;
+  margin-bottom: 0;
+  box-shadow: none;
+}
+.planner-detail-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+}
+.planner-detail-actions .data-action {
+  min-height: 88px;
+  padding: 15px;
+  text-align: left;
+}
+.planner-retake-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-soft);
+  overflow: hidden;
+  margin: 18px 0 12px;
+}
+.planner-retake-results > div {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.planner-retake-results > div + div {
+  border-left: 1px solid var(--line);
+}
+.planner-retake-results span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.planner-retake-results strong {
+  font-size: 20px;
+  color: var(--primary);
+  font-weight: 600;
+}
+.planner-retake-results b {
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 500;
+}
+@media (min-width: 1200px) {
+  .planner-workspace .semester-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1050px) {
+  #main.planner-main {
+    padding: 24px 22px;
+  }
+  .planner-summary > div {
+    padding: 13px 12px;
+  }
+  .planner-summary strong {
+    font-size: 26px;
+  }
+  .planner-summary strong > small {
+    display: block;
+  }
+  .planner-scenario-actions {
+    gap: 4px;
+  }
+  .planner-scenario-actions .button {
+    font-size: 11px;
+    padding: 8px;
+  }
+  .planner-workspace .semester-board {
+    gap: 12px;
+  }
+}
+@media (max-width: 620px) {
+  #main.planner-main {
+    padding: 21px 16px;
+  }
+  .planner-workspace .page-heading {
+    align-items: flex-start;
+    margin-bottom: 13px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .planner-workspace .page-heading h1 {
+    font-size: 27px;
+  }
+  .planner-workspace .page-heading p {
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  .planner-workspace .heading-actions {
+    width: auto;
+  }
+  .planner-workspace .heading-actions .button {
+    min-height: 44px;
+    padding: 7px 11px;
+  }
+  .planner-scenario-bar {
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .planner-scenario-select {
+    width: 100%;
+    flex: auto;
+  }
+  .planner-scenario-select .scenario-picker {
+    max-width: none;
+  }
+  .planner-scenario-actions {
+    width: 100%;
+  }
+  .planner-scenario-actions .danger-link {
+    margin-left: auto;
+  }
+  .planner-summary {
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 14px;
+  }
+  .planner-summary > div {
+    padding: 12px 14px;
+  }
+  .planner-summary > div:nth-child(2) {
+    border-right: 0;
+  }
+  .planner-summary > div:nth-child(n + 3) {
+    border-top: 1px solid var(--line);
+  }
+  .planner-summary strong {
+    font-size: 26px;
+  }
+  .planner-summary strong > small {
+    display: inline;
+    font-size: 10px;
+  }
+  .planner-summary small {
+    font-size: 9px;
+  }
+  .planner-start {
+    flex-wrap: wrap;
+    gap: 3px 16px;
+    padding: 5px 0 12px;
+  }
+  .planner-start > span {
+    flex-basis: 100%;
+    font-size: 11px;
+  }
+  .planner-tools {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .planner-tools .segmented {
+    width: auto;
+  }
+  .planner-fill-actions {
+    width: 100%;
+  }
+  .planner-fill-actions .button {
+    flex: 1;
+    padding: 8px 10px;
+  }
+  .planner-workspace > .table-toolbar {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .planner-workspace > .table-toolbar .search-box {
+    width: 100%;
+    flex: auto;
+  }
+  .planner-workspace .filter-controls {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+  .planner-workspace .filter-controls select {
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    max-width: none;
+    min-height: 44px;
+    font-size: 11px;
+  }
+  .planner-board-caption {
+    font-size: 10px;
+    gap: 8px;
+  }
+  .planner-board-caption .checkbox-label {
+    font-size: 10px;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .planner-workspace .semester-board {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .planner-workspace .semester-course {
+    padding: 11px 12px 0;
+  }
+  .planner-course-row {
+    grid-template-columns: 10px minmax(0, 1fr) 76px;
+  }
+  .planner-course-code {
+    font-size: 13px;
+  }
+  .planner-course-info p {
+    font-size: 11px;
+  }
+  .planner-retake-results strong {
+    font-size: 18px;
+  }
+}
+@media print {
+  .planner-tools,
+  .planner-scenario-bar,
+  .planner-start,
+  .planner-board-caption,
+  .planner-course-footer,
+  .planner-workspace > .table-toolbar {
+    display: none;
+  }
+  .planner-workspace .semester-board {
+    grid-template-columns: 1fr 1fr;
+  }
+  .planner-workspace .semester-course {
+    break-inside: avoid;
+  }
+}
+
+/* Keep example and mobile chrome smaller than the actual planning area. */
+.planner-main > .demo-banner {
+  padding: 8px 14px;
+  min-height: 44px;
+  margin-bottom: 18px;
+  font-size: 11px;
+}
+.planner-main > .demo-banner button {
+  min-height: 36px;
+  font-size: 11px;
+}
+@media (max-width: 620px) {
+  .planner-workspace .heading-actions {
+    width: 100%;
+    gap: 8px;
+  }
+  .planner-workspace .heading-actions .button {
+    flex: 1;
+  }
+  .planner-tools {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  .planner-tools .segmented button {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+  .planner-fill-actions {
+    width: auto;
+  }
+  .planner-fill-actions .button {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+  .planner-workspace > .table-toolbar .filter-controls {
+    display: flex;
+  }
+  .planner-summary > div:nth-child(n + 3) {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .planner-summary > div:nth-child(n + 3) > strong {
+    font-size: 21px;
+  }
+  .planner-summary > div:nth-child(n + 3) > small {
+    display: none;
+  }
+  .planner-main > .demo-banner {
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+}

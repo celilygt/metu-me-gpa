@@ -10,6 +10,7 @@ const moduleNames = ["curriculum.js", "engine.js", "state.js", "app.js"];
 const assets = [
   "index.html",
   "style.css",
+  "planner.css",
   ...moduleNames,
   "favicon.svg",
   "SOURCES.md",
@@ -29,18 +30,23 @@ export function bundleModule(source, filename, availableModules) {
           `${filename}: unsupported or out-of-order import ${specifier}`,
         );
       }
-      const bindings = names.trim().replace(/,$/, "").split(",").map((name) => {
-        const match = name
-          .trim()
-          .match(/^([A-Za-z_$][\w$]*)(?:\s+as\s+([A-Za-z_$][\w$]*))?$/);
-        if (!match) throw new Error(`${filename}: unsupported import ${name}`);
-        if (!availableModules.get(dependency).includes(match[1])) {
-          throw new Error(
-            `${filename}: ${dependency} does not export ${match[1]}`,
-          );
-        }
-        return match[2] ? `${match[1]}: ${match[2]}` : match[1];
-      });
+      const bindings = names
+        .trim()
+        .replace(/,$/, "")
+        .split(",")
+        .map((name) => {
+          const match = name
+            .trim()
+            .match(/^([A-Za-z_$][\w$]*)(?:\s+as\s+([A-Za-z_$][\w$]*))?$/);
+          if (!match)
+            throw new Error(`${filename}: unsupported import ${name}`);
+          if (!availableModules.get(dependency).includes(match[1])) {
+            throw new Error(
+              `${filename}: ${dependency} does not export ${match[1]}`,
+            );
+          }
+          return match[2] ? `${match[1]}: ${match[2]}` : match[1];
+        });
       imports.push(
         `const { ${bindings.join(", ")} } = modules[${JSON.stringify(dependency)}];`,
       );
@@ -74,9 +80,10 @@ export async function build({
   rootDir = projectRoot,
   outputDir = path.join(rootDir, "dist"),
 } = {}) {
-  const [html, css, favicon, ...sources] = await Promise.all([
+  const [html, css, plannerCss, favicon, ...sources] = await Promise.all([
     readFile(path.join(rootDir, "index.html"), "utf8"),
     readFile(path.join(rootDir, "style.css"), "utf8"),
+    readFile(path.join(rootDir, "planner.css"), "utf8"),
     readFile(path.join(rootDir, "favicon.svg"), "utf8"),
     ...moduleNames.map((name) => readFile(path.join(rootDir, name), "utf8")),
   ]);
@@ -93,6 +100,12 @@ export async function build({
     /<link\s+rel="stylesheet"\s+href="style\.css(?:\?[^"<>]*)?"\s*\/?>/,
     `<style>\n${css.replace(/<\/style/gi, "<\\/style")}\n</style>`,
     "local stylesheet",
+  );
+  standalone = replaceOnce(
+    standalone,
+    /<link\s+rel="stylesheet"\s+href="planner\.css(?:\?[^"<>]*)?"\s*\/?>/,
+    `<style>\n${plannerCss.replace(/<\/style/gi, "<\\/style")}\n</style>`,
+    "planner stylesheet",
   );
   standalone = replaceOnce(
     standalone,

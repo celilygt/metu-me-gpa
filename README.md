@@ -1,6 +1,6 @@
-# Pusula
+# Not Planı
 
-A static, Turkish-language degree and GPA planner for METU Mechanical Engineering and the Mechatronics minor. Start from an empty transcript, enter your actual grades, then compare possible futures across a five-year plan.
+A static, Turkish-language degree and GPA planner for METU Mechanical Engineering and the Mechatronics minor. The app opens on the cream-and-burgundy scenario workspace. Start from an empty transcript, enter your actual grades, then compare possible futures across a five-year plan.
 
 [Open the planner](https://celilygt.github.io/metu-me-gpa/). The app needs no account or backend.
 
@@ -33,9 +33,11 @@ The build reads only the application source assets. It does not read browser sto
 
 1. Open **Transkriptim** and enter first- and second-year grades. Update the actual course, local credits and completed semester where your transcript differs from the template. Empty grades are not zeros.
 2. Open **Senaryolarım**. The default plan starts in semester 5 and ends in semester 10. Drag course cards between semesters, or use each card's semester selector on touchscreens and with a keyboard. Keep only three courses in semester 5 if that is your real plan; the semester and cumulative GPA calculations follow their placement.
-3. Choose **Rastgele doldur → Müfredattaki 4. sınıf dersleri** to try later grades quickly. You can fill all remaining courses, a specific semester or the fifth year, choose a grade range, or give every selected course one grade. Actual transcript grades stay unchanged. Existing predictions are replaced only when requested.
+3. Choose **Notları doldur → Müfredattaki 4. sınıf dersleri** to try later grades quickly. You can fill all remaining courses, a specific semester or the fifth year, choose a grade range, or give every selected course one grade. Actual transcript grades stay unchanged. Existing predictions are replaced only when requested.
+The semester board has search and program filters; filtering never changes the GPA calculation. Open a course’s **Detaylar** for grade probabilities, exam calculations or course editing. Turn on **Geçmiş dönemler** to edit existing actual grades directly.
+
 4. Create or duplicate a named scenario to compare alternatives. Give individual courses letter grades or your own grade probabilities. The probability range reflects those assumptions, with independent course outcomes; it is not a prediction of academic performance.
-5. Open **Tekrar almaya değer mi?** and try PHYS 105 from BB to AA. Compare the effect on today's GPA with the effect after the other planned courses. Add the repeat to a scenario to see it in a future semester. A worse latest grade can lower the cumulative GPA.
+5. In **Senaryolarım**, choose **Ders tekrarı** and try PHYS 105 from BB to AA. Compare the effect on today's GPA with the effect after the other planned courses. Add the repeat to a scenario to see it in a future semester. A worse latest grade can lower the cumulative GPA.
 6. Use **Sınav hesabı** for weighted exams, assignments and a desired numeric course score. Letter-grade thresholds depend on the actual course; a numeric exam target does not establish a university letter grade.
 7. Check **Mekatronik yandal** separately. Choose the actual approved courses and mark shared course counting only where it applies. Major and minor GPAs are separate.
 

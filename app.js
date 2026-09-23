@@ -92,11 +92,11 @@ let notice = loaded.notice || loaded.error || "";
 let saveError = "";
 const history = [];
 const ui = {
-  page: "overview",
+  page: "scenarios",
   year: "1",
   search: "",
   status: "all",
-  program: "major",
+  program: "all",
   retakeId: "PHYS105",
   retakeGrade: "AA",
   examId: "",
@@ -105,9 +105,9 @@ const ui = {
 };
 let toastTimer;
 const navItems = [
-  ["overview", "grid", "Genel bakış"],
-  ["transcript", "book", "Transkriptim"],
   ["scenarios", "branch", "Senaryolarım"],
+  ["transcript", "book", "Transkriptim"],
+  ["overview", "grid", "Genel bakış"],
   ["retakes", "repeat", "Ders tekrarı"],
   ["exams", "chart", "Sınav hesabı"],
   ["minor", "chip", "Mekatronik yandal"],
@@ -183,6 +183,7 @@ function toast(message, error = false) {
 }
 function go(page) {
   ui.page = page;
+  ui.program = page === "scenarios" ? "all" : "major";
   ui.search = "";
   ui.status = "all";
   closeDialog();
@@ -206,7 +207,7 @@ function render() {
     minor: minorPage,
   };
   $("#app").innerHTML = `<aside class="sidebar">
-    <a href="#overview" class="brand" data-page="overview">Not planı</a>
+    <a href="#scenarios" class="brand" data-page="scenarios">Not planı</a>
     <nav aria-label="Ana menü">${navItems
       .filter(([id]) => id !== "minor" || state.profile.minorEnabled)
       .map(
@@ -217,7 +218,7 @@ function render() {
     <div class="sidebar-bottom"><div class="private-note">${icon("lock")}<span>Notların bu tarayıcıda kaydedilir.</span></div><button class="nav-item" data-action="data">${icon("data")}<span>Verilerim & paylaşım</span></button><button class="nav-item" data-action="settings">${icon("compass")}<span>Ayarlar & kaynaklar</span></button></div>
   </aside>
   <div class="main-shell"><header class="topbar"><div class="breadcrumb">Makina Mühendisliği <span>/</span> <strong>${navItems.find(([id]) => id === ui.page)[2]}</strong></div><div class="topbar-actions"><span class="save-status ${saveError ? "warning-text" : ""}">${saveError ? "Kayıt başarısız" : "Bu tarayıcıda saklanır"}</span><button class="icon-button" data-action="undo" aria-label="Son değişikliği geri al" title="Son değişikliği geri al" ${!history.length ? "disabled" : ""}>${icon("undo")}</button><button class="icon-button" data-action="settings" aria-label="Plan ayarları" title="Plan ayarları">${icon("compass")}</button><button class="button small secondary" data-action="data">${icon("download")}<span>Yedekle / aktar</span></button></div></header>
-  <main id="main">
+  <main id="main" class="${ui.page === "scenarios" ? "planner-main" : ""}">
     ${state.example ? '<div class="banner demo-banner"><span><strong>Örnek öğrenci verileri.</strong> Bu notlar sana ait değil; özgürce deneyebilirsin.</span><button data-action="clear-example">Kendi notlarımla başla ' + icon("arrow") + "</button></div>" : ""}
     ${notice ? `<div class="banner"><span>${esc(notice)}</span><button class="icon-button" data-action="dismiss-notice" aria-label="Bildirimi kapat">${icon("close")}</button></div>` : ""}
     ${saveError ? `<div class="banner error-banner" role="alert">${esc(saveError)} Verilerim panelinden bir yedek al.</div>` : ""}
@@ -314,7 +315,7 @@ function trajectoryChart() {
   const path = valid
     .map((d, i) => `${i ? "L" : "M"}${d.x},${y(d.value)}`)
     .join(" ");
-  return `<div class="chart-wrap"><svg class="trajectory" viewBox="0 0 ${w} ${h}" role="img" aria-label="Mevcut ortalama ve planlanan dönemlere göre ortalama: ${values.map((v) => `${v.label} ${num(v.value)}`).join(", ")}"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d8849f" stop-opacity=".18"/><stop offset="100%" stop-color="#d8849f" stop-opacity="0"/></linearGradient></defs>${[0, 1, 2, 3, 4].map((v) => `<line x1="${left}" y1="${y(v)}" x2="${w - right}" y2="${y(v)}" class="grid-line"/><text x="${left - 14}" y="${y(v) + 4}" text-anchor="end">${v},0</text>`).join("")}<line x1="${left}" y1="${y(state.profile.target)}" x2="${w - right}" y2="${y(state.profile.target)}" class="target-line"/>${valid.length > 1 ? `<path d="${path} L${valid.at(-1).x},${h - bottom} L${valid[0].x},${h - bottom}Z" fill="url(#chartFill)"/>` : ""}<path d="${path}" class="forecast-line"/>${valid.map((d) => `<circle cx="${d.x}" cy="${y(d.value)}" r="5" class="forecast-dot"/><text class="point-label" x="${d.x}" y="${y(d.value) - 14}" text-anchor="middle">${num(d.value)}</text>`).join("")}${values.map((v, i) => `<text x="${x(i)}" y="${h - 10}" text-anchor="middle">${v.label}</text>`).join("")}</svg>${!terms.length ? `<div class="chart-empty"><span>${icon("branch")}</span><strong>Henüz tahmin girilmedi</strong><p>Derslerine tahmini not eklediğinde grafik güncellenir.</p><button class="button small secondary" data-page="scenarios">Dersleri planla ${icon("arrow")}</button></div>` : ""}</div>`;
+  return `<div class="chart-wrap"><svg class="trajectory" viewBox="0 0 ${w} ${h}" role="img" aria-label="Mevcut ortalama ve planlanan dönemlere göre ortalama: ${values.map((v) => `${v.label} ${num(v.value)}`).join(", ")}"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#762b43" stop-opacity=".18"/><stop offset="100%" stop-color="#762b43" stop-opacity="0"/></linearGradient></defs>${[0, 1, 2, 3, 4].map((v) => `<line x1="${left}" y1="${y(v)}" x2="${w - right}" y2="${y(v)}" class="grid-line"/><text x="${left - 14}" y="${y(v) + 4}" text-anchor="end">${v},0</text>`).join("")}<line x1="${left}" y1="${y(state.profile.target)}" x2="${w - right}" y2="${y(state.profile.target)}" class="target-line"/>${valid.length > 1 ? `<path d="${path} L${valid.at(-1).x},${h - bottom} L${valid[0].x},${h - bottom}Z" fill="url(#chartFill)"/>` : ""}<path d="${path}" class="forecast-line"/>${valid.map((d) => `<circle cx="${d.x}" cy="${y(d.value)}" r="5" class="forecast-dot"/><text class="point-label" x="${d.x}" y="${y(d.value) - 14}" text-anchor="middle">${num(d.value)}</text>`).join("")}${values.map((v, i) => `<text x="${x(i)}" y="${h - 10}" text-anchor="middle">${v.label}</text>`).join("")}</svg>${!terms.length ? `<div class="chart-empty"><span>${icon("branch")}</span><strong>Henüz tahmin girilmedi</strong><p>Derslerine tahmini not eklediğinde grafik güncellenir.</p><button class="button small secondary" data-page="scenarios">Dersleri planla ${icon("arrow")}</button></div>` : ""}</div>`;
 }
 function gradeSelect(id, value, mode, noncredit = false) {
   const options = noncredit
@@ -400,26 +401,118 @@ function scenariosPage() {
   const minorUncertain =
     state.profile.minorEnabled &&
     allCourses().some((c) => c.minor && scenario.courses[c.id]?.distribution);
-  return `${pageHeading("Dönem planı", "Gerçek notların sabit kalır. Buradaki her not, değiştirebileceğin bir varsayım.", `<button class="button secondary" data-action="random-fill">${icon("spark")} Rastgele doldur</button><button class="button primary" data-action="new-scenario">${icon("plus")} Yeni senaryo</button>`)}
-  <div class="scenario-bar">${scenarioSelect()}<button class="icon-button" data-action="rename-scenario" aria-label="Senaryoyu yeniden adlandır">${icon("edit")}</button><button class="button small secondary" data-action="duplicate-scenario">${icon("copy")} Kopyala</button><button class="button small secondary" data-action="compare">Yan yana karşılaştır</button><button class="subtle-link danger-link" data-action="delete-scenario" ${state.scenarios.length === 1 ? "disabled" : ""}>Sil</button></div>
-  <section class="scenario-result"><div><span class="eyebrow">BU PLANLA ANADAL ORTALAMAN</span><div class="scenario-numbers"><span>${num(a.gpa)}</span>${icon("arrow")}<strong>${num(p.gpa)}</strong><span class="delta-pill">${a.gpa === null ? "İlk tahmin" : sign(p.gpa - a.gpa)}</span></div></div><div class="scenario-summary"><strong>${p.plannedCount} ders · ${num(p.plannedCredits, 0)} kredi</strong><span>${p.remainingUnplanned} anadal gerekliliği henüz planlanmadı</span></div>${state.profile.minorEnabled ? `<div class="scenario-summary minor-summary"><span>Yandal tahmini</span><strong>${num(predicted("minor").gpa)}</strong></div>` : ""}</section>
-  <div class="bulk-panel"><div><strong>Kalan dersler şöyle gelse…</strong><span>Tüm kalan kredili derslere tek dokunuşla tahmin ekle.</span></div><div class="grade-buttons">${["CC", "BB", "BA", "AA"].map((g) => `<button class="button small secondary" data-action="bulk-grade" data-grade-value="${g}">${g} <span>${num(gradePoints[g], 1)}</span></button>`).join("")}</div></div>
-  ${uncertain ? probabilityPanel("major") : ""}${minorUncertain ? probabilityPanel("minor") : ""}
+  return `<div class="planner-workspace">
+  ${pageHeading("Senaryolarım", "Dersleri taşı, notları değiştir, ortalamana etkisini gör.", `<button class="button secondary" data-page="transcript">${icon("book")} Gerçek notlarım</button><button class="button secondary" data-action="planner-retake">${icon("repeat")} Ders tekrarı</button>`)}
+  <div class="planner-scenario-bar"><div class="planner-scenario-select">${scenarioSelect()}<button class="icon-button" data-action="rename-scenario" aria-label="Senaryoyu yeniden adlandır">${icon("edit")}</button></div><div class="planner-scenario-actions"><button class="button small secondary" data-action="new-scenario">${icon("plus")} Yeni</button><button class="button small secondary" data-action="duplicate-scenario">${icon("copy")} Kopyala</button><button class="button small secondary" data-action="compare">Karşılaştır</button><button class="icon-button danger-link" data-action="delete-scenario" aria-label="Senaryoyu sil" title="Senaryoyu sil" ${state.scenarios.length === 1 ? "disabled" : ""}>${icon("close")}</button></div></div>
+  <section class="planner-summary" aria-label="Senaryo sonuçları"><div><span>Şu anki GNO</span><strong>${num(a.gpa)}</strong><small>${num(a.gpaCredits, 0)} kredi notu girildi</small></div><div class="planner-projection"><span>Senaryo sonu GNO</span><div><strong>${num(p.gpa)}</strong>${a.gpa !== null && p.gpa !== null ? `<b>${sign(p.gpa - a.gpa)}</b>` : ""}</div><small>${p.remainingUnplanned ? `${p.remainingUnplanned} gerekliliğe daha not gerekli` : "Tüm anadal gereklilikleri planlandı"}</small></div><div><span>Planlanan anadal dersi</span><strong>${p.plannedCount}<small> / ${num(p.plannedCredits, 0)} kredi</small></strong><small>${state.profile.currentSemester}–${state.profile.graduationSemester}. dönem</small></div>${state.profile.minorEnabled ? `<div><span>Yandal tahmini</span><strong>${num(predicted("minor").gpa)}</strong><small>Anadaldan ayrı hesaplanır</small></div>` : ""}</section>
+  ${!hasData() ? `<div class="planner-start"><span>Toplam ortalaman için önce aldığın derslerin gerçek notlarını ekle.</span><button class="subtle-link" data-page="transcript">Notları gir ${icon("arrow")}</button>${!p.plannedCount ? '<button class="subtle-link" data-action="example">Örnekle dene</button>' : ""}</div>` : ""}
+  <div class="planner-tools"><div class="segmented" aria-label="Görünüm"><button class="${ui.planView !== "list" ? "active" : ""}" data-action="board-view" aria-pressed="${ui.planView !== "list"}">${icon("grid")} Dönemler</button><button class="${ui.planView === "list" ? "active" : ""}" data-action="list-view" aria-pressed="${ui.planView === "list"}">${icon("book")} Liste</button></div><div class="planner-fill-actions"><button class="button primary" data-action="random-fill">${icon("spark")} Notları doldur</button></div></div>
+  ${filters(false)}
+  ${uncertain || minorUncertain ? `<details class="planner-uncertainty"><summary>Not olasılıklarına göre sonuç aralığı</summary>${uncertain ? probabilityPanel("major") : ""}${minorUncertain ? probabilityPanel("minor") : ""}</details>` : ""}
   ${
     ui.planView !== "list"
       ? planBoard()
-      : `<div class="board-toolbar"><div class="segmented"><button data-action="board-view">${icon("grid")} Dönem planı</button><button class="active" data-action="list-view">${icon("book")} Ders listesi</button></div></div>
-  <div class="panel table-panel">${filters(false)}<div class="table-scroll"><table class="course-table scenario-table"><thead><tr><th scope="col">Ders</th><th scope="col">Şu an</th><th scope="col">Tahminin</th><th scope="col">Planlanan dönem</th><th scope="col"><span class="sr-only">Olasılıklar</span></th></tr></thead><tbody>${
-    rows
-      .map((c) => {
-        const e = entry(c.id),
-          g = state.transcript[c.id] || "";
-        return `<tr class="${e.grade || e.distribution ? "planned-row" : ""}"><td><div class="course-title"><span class="course-code">${esc(c.code)}</span><span class="row-hint">${c.credits} kr.${c.major && c.minor ? " · ortak" : ""}</span></div><div class="course-name">${esc(c.name)}</div></td><td><span class="actual-grade">${g || "—"}</span>${isPassed(g) && Boolean(e.grade || e.distribution) ? '<span class="row-hint">Tekrar</span>' : ""}</td><td>${e.distribution ? `<button class="probability-chip" data-action="probability" data-id="${esc(c.id)}">${icon("spark")} Olasılıklı</button>` : gradeSelect(c.id, e.grade || "", "plan", c.credits === 0)}</td><td><select id="term-${esc(c.id)}" class="term-select" data-term="${esc(c.id)}" aria-label="${esc(c.code)} planlanan dönem">${Array.from({ length: state.profile.graduationSemester }, (_, i) => `<option value="${i + 1}" ${e.term === i + 1 ? "selected" : ""}>${i + 1}. dönem</option>`).join("")}</select></td><td><button class="icon-button" data-action="${c.credits ? "probability" : "clear-plan"}" data-id="${esc(c.id)}" title="${c.credits ? "Not olasılıklarını dene" : "Tahmini temizle"}" aria-label="${esc(c.code)} ${c.credits ? "not olasılıkları" : "tahminini temizle"}">${icon(c.credits ? "spark" : "close")}</button></td></tr>`;
-      })
-      .join("") ||
-    '<tr><td colspan="5" class="empty-cell">Bu filtrelerle eşleşen ders yok.</td></tr>'
-  }</tbody></table></div><div class="table-footer"><span>Tahmini kaldırmak için “Seç…” seç.</span><span>${icon("spark")} ile AA / BA / BB ihtimallerini kendin belirle.</span></div></div>`
-  }<div class="inline-note">${icon("info")} Dönemler bir planlama sırasıdır; dersin açılacağını veya ön koşullarının sağlandığını garanti etmez. Seçmeli yerlerinin gerçek ders ve kredilerini Transkriptim’den düzenle.</div>`;
+      : `<div class="panel table-panel"><div class="table-scroll"><table class="course-table scenario-table"><thead><tr><th scope="col">Ders</th><th scope="col">Şu an</th><th scope="col">Tahminin</th><th scope="col">Planlanan dönem</th><th scope="col"><span class="sr-only">Olasılıklar</span></th></tr></thead><tbody>${
+          rows
+            .map((c) => {
+              const e = entry(c.id),
+                g = state.transcript[c.id] || "";
+              return `<tr class="${e.grade || e.distribution ? "planned-row" : ""}"><td><div class="course-title"><span class="course-code">${esc(c.code)}</span><span class="row-hint">${c.credits} kr.${c.major && c.minor ? " · ortak" : ""}</span></div><div class="course-name">${esc(c.name)}</div></td><td><span class="actual-grade">${g || "—"}</span>${isPassed(g) && Boolean(e.grade || e.distribution) ? '<span class="row-hint">Tekrar</span>' : ""}</td><td>${e.distribution ? `<button class="probability-chip" data-action="probability" data-id="${esc(c.id)}">${icon("spark")} Olasılıklı</button>` : gradeSelect(c.id, e.grade || "", "plan", c.credits === 0)}</td><td><select id="term-${esc(c.id)}" class="term-select" data-term="${esc(c.id)}" aria-label="${esc(c.code)} planlanan dönem">${Array.from({ length: state.profile.graduationSemester }, (_, i) => `<option value="${i + 1}" ${e.term === i + 1 ? "selected" : ""}>${i + 1}. dönem</option>`).join("")}</select></td><td><button class="icon-button" data-action="${c.credits ? "probability" : "clear-plan"}" data-id="${esc(c.id)}" title="${c.credits ? "Not olasılıklarını dene" : "Tahmini temizle"}" aria-label="${esc(c.code)} ${c.credits ? "not olasılıkları" : "tahminini temizle"}">${icon(c.credits ? "spark" : "close")}</button></td></tr>`;
+            })
+            .join("") ||
+          '<tr><td colspan="5" class="empty-cell">Bu filtrelerle eşleşen ders yok.</td></tr>'
+        }</tbody></table></div><div class="table-footer"><span>Tahmini kaldırmak için “Seç…” seç.</span><span>${icon("spark")} ile AA / BA / BB ihtimallerini kendin belirle.</span></div></div>`
+  }<div class="inline-note">${icon("info")} Dönemler bir planlama sırasıdır; dersin açılacağını veya ön koşullarının sağlandığını garanti etmez. Seçmeli yerlerinin gerçek ders ve kredilerini Transkriptim’den düzenle.</div></div>`;
+}
+function plannerCourseDialog(id, isActual) {
+  const c = allCourses().find((course) => course.id === id);
+  if (!c) return;
+  openDialog(
+    esc(c.code),
+    `<p class="planner-dialog-description">${esc(c.name)} · ${c.credits} yerel kredi${isActual ? ` · Gerçek not: ${state.transcript[id]}` : ""}</p><div class="planner-detail-actions">${!isActual && c.credits ? `<button class="data-action" data-action="probability" data-id="${esc(id)}">${icon("chart")}<strong>Not olasılıkları</strong><span>AA, BA, BB gibi sonuçlara yüzde ver.</span></button><button class="data-action" data-action="planner-exam" data-id="${esc(id)}">${icon("book")}<strong>Sınav hesabı</strong><span>Vize ve final notlarından ders puanını hesapla.</span></button>` : ""}${isActual && c.credits && Object.hasOwn(gradePoints, state.transcript[id]) ? `<button class="data-action" data-action="planner-retake" data-id="${esc(id)}">${icon("repeat")}<strong>Tekrarını dene</strong><span>Yeni notun ortalamaya etkisini gör.</span></button>` : ""}<button class="data-action" data-action="edit-course" data-id="${esc(id)}">${icon("edit")}<strong>Dersi düzenle</strong><span>Ders seçimi, kredi ve program bilgileri.</span></button></div>${!isActual ? `<div class="dialog-actions"><button class="button secondary" data-action="planner-clear" data-id="${esc(id)}">Tahmini temizle</button><button class="button primary" data-action="close-dialog">Tamam</button></div>` : ""}`,
+  );
+}
+function plannerRetakeDialog(id = ui.retakeId) {
+  const courses = visibleCourses().filter(
+    (c) => c.credits > 0 && Object.hasOwn(gradePoints, state.transcript[c.id]),
+  );
+  if (!courses.length) {
+    openDialog(
+      "Ders tekrarı",
+      `<p>Önce tamamladığın derslerin gerçek notlarını gir. Sonra aynı ders için farklı bir not deneyebilirsin.</p><div class="dialog-actions"><button class="button primary" data-page="transcript">Gerçek notları gir ${icon("arrow")}</button></div>`,
+    );
+    return;
+  }
+  const selected = courses.find((c) => c.id === id) || courses[0];
+  openDialog(
+    "Ders tekrarı",
+    `<form id="planner-retake-form"><label for="planner-retake-course">Tekrar alacağın ders</label><select id="planner-retake-course">${courses.map((c) => `<option value="${esc(c.id)}" ${c.id === selected.id ? "selected" : ""}>${esc(c.code)} · ${state.transcript[c.id]} · ${c.credits} kredi</option>`).join("")}</select><div class="form-grid"><label for="planner-retake-grade">Yeni not<select id="planner-retake-grade">${letterGrades.map((g) => `<option value="${g}" ${g === ui.retakeGrade ? "selected" : ""}>${g}</option>`).join("")}</select></label><label for="planner-retake-term">Tekrar dönemi<select id="planner-retake-term"></select></label></div><div id="planner-retake-preview" aria-live="polite"></div><p class="small muted">Yeni not eski notun yerine geçer; daha düşük bir not ortalamayı düşürebilir. Gerçek transkriptin değişmez.</p><div class="dialog-actions"><button class="button secondary" type="button" data-action="close-dialog">Vazgeç</button><button class="button primary" type="submit">Senaryoya ekle ${icon("plus")}</button></div></form>`,
+  );
+  const updateTerms = () => {
+    const c = courses.find((c) => c.id === $("#planner-retake-course").value);
+    const first = Math.max(
+      state.profile.currentSemester,
+      (courseSemester(c) || 1) + 1,
+    );
+    const plannedTerm = plannedEntry(c.id).term;
+    const last = Math.min(
+      12,
+      Math.max(state.profile.graduationSemester, plannedTerm, first),
+    );
+    $("#planner-retake-term").innerHTML = Array.from(
+      { length: last - first + 1 },
+      (_, i) => first + i,
+    )
+      .map(
+        (term) =>
+          `<option value="${term}" ${term === plannedTerm ? "selected" : ""}>${term}. dönem</option>`,
+      )
+      .join("");
+  };
+  const preview = () => {
+    const c = courses.find((c) => c.id === $("#planner-retake-course").value);
+    const g = $("#planner-retake-grade").value;
+    const noTerm = !$("#planner-retake-term").value;
+    $("#planner-retake-form button[type=submit]").disabled = noTerm;
+    if (noTerm) {
+      $("#planner-retake-preview").innerHTML =
+        '<p class="inline-note">Bu dersin ardından, 12 dönemlik plan sınırı içinde bir tekrar dönemi bulunmuyor.</p>';
+      return;
+    }
+    const impact = retakeImpact(
+      allCourses(),
+      state.transcript,
+      c.id,
+      g,
+      activeScenario(),
+      c.major ? "major" : "minor",
+    );
+    const outsideWindow =
+      isPassed(state.transcript[c.id]) &&
+      Number($("#planner-retake-term").value) > (courseSemester(c) || 1) + 4;
+    $("#planner-retake-preview").innerHTML =
+      `<div class="planner-retake-results"><div><span>Bugünkü ${c.major ? "anadal" : "yandal"} ortalaman</span><strong>${num(impact.currentGpa)} → ${num(impact.immediateGpa)}</strong><b>${sign(impact.immediateDelta)}</b></div><div><span>Diğer planladığın derslerle</span><strong>${num(impact.projectedBaselineGpa)} → ${num(impact.projectedGpa)}</strong><b>${sign(impact.projectedDelta)}</b></div></div><p class="small muted">${predicted(c.major ? "major" : "minor").remainingUnplanned ? "Tam mezuniyet etkisi için kalan derslerini de planla." : "Senaryondaki diğer notlar sabit tutulur."}</p>${outsideWindow ? '<div class="inline-note">Bu dönem, geçilen dersler için dört dönemlik tekrar süresinin dışında. Kayıt uygunluğunu bölümden doğrula.</div>' : '<p class="small muted">Tekrar süresi ve kayıt uygunluğu danışman onayına bağlıdır.</p>'}`;
+  };
+  updateTerms();
+  preview();
+  $("#planner-retake-form").addEventListener("change", (event) => {
+    if (event.target.id === "planner-retake-course") updateTerms();
+    preview();
+  });
+  $("#planner-retake-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const courseId = $("#planner-retake-course").value;
+    const grade = $("#planner-retake-grade").value;
+    const term = Number($("#planner-retake-term").value);
+    closeDialog();
+    mutate(() => {
+      const e = { ...plannedEntry(courseId), grade, term };
+      delete e.distribution;
+      activeScenario().courses[courseId] = e;
+      ui.retakeId = courseId;
+      ui.retakeGrade = grade;
+    }, "Ders tekrarı senaryona eklendi.");
+  });
 }
 function probabilityPanel(program = "major") {
   const target =
@@ -492,6 +585,14 @@ function plannedEntry(id) {
   const c = allCourses().find((c) => c.id === id);
   return activeScenario().courses[id] || { grade: "", term: defaultTerm(c) };
 }
+function plannerCourseLabel(course) {
+  const code = course.code;
+  if (/^MINOR_ELECTIVE_[1-4]$/.test(code))
+    return `Yandal seçmeli ${code.at(-1)}`;
+  if (/^TE[1-5]$/.test(code)) return `Teknik seçmeli ${code.at(-1)}`;
+  if (/^NTE[1-2]$/.test(code)) return `Alan dışı seçmeli ${code.at(-1)}`;
+  return { FREE: "Serbest seçmeli", REST: "Kısıtlı seçmeli" }[code] || code;
+}
 function planBoard() {
   const courses = visibleCourses().map((c) => ({
     ...c,
@@ -509,7 +610,7 @@ function planBoard() {
     ...courses.map((c) => courseSemester(c) || state.profile.currentSemester),
     ...Object.values(activeScenario().courses).map((e) => e.term),
   );
-  return `<div class="board-toolbar"><div class="segmented"><button class="${ui.planView !== "list" ? "active" : ""}" data-action="board-view">${icon("grid")} Dönem planı</button><button class="${ui.planView === "list" ? "active" : ""}" data-action="list-view">${icon("book")} Ders listesi</button></div><label class="checkbox-label"><input id="show-history" type="checkbox" ${ui.showHistory ? "checked" : ""}> Geçmiş dönemleri de göster</label></div><div class="board-help">${icon("info")} Dersleri sürükleyerek taşı. Telefonda dersin dönem seçicisini kullan. Notu boş olan ders ortalamaya girmez.</div><div class="semester-board">${Array.from(
+  return `<div class="planner-board-caption"><span>Dersleri dönemler arasında sürükle.</span><label class="checkbox-label"><input id="show-history" type="checkbox" ${ui.showHistory ? "checked" : ""}> Geçmiş dönemler</label></div><div class="semester-board">${Array.from(
     { length: last - first + 1 },
     (_, i) => i + first,
   )
@@ -532,7 +633,46 @@ function planBoard() {
           cards.push({ c, actual: false, g: "" });
       }
       const creditLoad = cards.reduce((n, x) => n + x.c.credits, 0);
-      return `<section class="semester-card ${term === state.profile.currentSemester ? "current-semester" : ""}" data-drop-term="${term}" aria-label="${term}. dönem"><div class="semester-header"><div><span class="eyebrow">${Math.ceil(term / 2)}. SINIF · ${term % 2 ? "GÜZ" : "BAHAR"}</span><h3>${term}. dönem ${term === state.profile.currentSemester ? '<span class="mini-badge">ŞİMDİ</span>' : ""}</h3></div><span class="semester-load">${cards.length} ders · ${creditLoad} kr.</span></div><div class="semester-metrics"><span>Dönem <strong>${num(f?.major.semesterGpa)}</strong></span><span>Birikimli <strong>${num(f?.major.cumulativeGpa)}</strong></span>${state.profile.minorEnabled ? `<span>Yandal <strong>${num(f?.minor.cumulativeGpa)}</strong></span>` : ""}</div><div class="semester-course-list">${cards.map(({ c, actual: isActual, g }) => `<article class="semester-course ${isActual ? "recorded-course" : ""}" draggable="true" data-drag-course="${esc(c.id)}" data-drag-actual="${isActual}" data-original-term="${term}"><div class="semester-course-title"><span class="drag-handle" aria-hidden="true">⠿</span><div><span class="course-code">${esc(c.code)}</span> <span class="row-hint">${c.credits} kr.</span><p>${esc(c.name)}</p></div>${isActual ? '<span class="mini-badge">GERÇEK</span>' : state.transcript[c.id] ? '<span class="mini-badge">TEKRAR</span>' : c.minor && !c.major ? '<span class="mini-badge">YANDAL</span>' : ""}</div><div class="semester-course-footer">${isActual ? `<span class="recorded-grade">${g} <small>kayıtlı not</small></span>` : entry(c.id).distribution ? `<button class="probability-chip" data-action="probability" data-id="${esc(c.id)}">${icon("spark")} Olasılıklı</button>` : gradeSelect(c.id, g, "plan", c.credits === 0)}<label class="move-label"><span class="sr-only">${esc(c.code)} ${isActual ? "gerçek" : "planlanan"} dersini taşı</span><select data-move-course="${esc(c.id)}" data-move-actual="${isActual}" aria-label="${esc(c.code)} ${isActual ? "gerçek" : "planlanan"} dönem">${Array.from({ length: last }, (_, j) => `<option value="${j + 1}" ${j + 1 === term ? "selected" : ""}>${j + 1}. dönem</option>`).join("")}</select></label>${!isActual && c.credits ? `<button class="icon-button" data-action="probability" data-id="${esc(c.id)}" aria-label="${esc(c.code)} not olasılıkları">${icon("spark")}</button>` : ""}</div></article>`).join("") || '<div class="semester-empty">Dersleri bu döneme sürükle.</div>'}</div></section>`;
+      const shownCards = cards.filter(({ c }) => {
+        if (ui.program !== "all" && !c[ui.program]) return false;
+        if (
+          ui.search &&
+          !`${c.code} ${c.name}`
+            .toLocaleLowerCase("tr")
+            .includes(ui.search.toLocaleLowerCase("tr"))
+        )
+          return false;
+        const e = activeScenario().courses[c.id];
+        if (ui.status === "remaining") return !e?.grade && !e?.distribution;
+        if (ui.status === "graded") return Boolean(e?.grade || e?.distribution);
+        if (ui.status === "failed")
+          return (
+            Boolean(state.transcript[c.id]) && !isPassed(state.transcript[c.id])
+          );
+        return true;
+      });
+      return `<section class="semester-card ${term === state.profile.currentSemester ? "current-semester" : ""}" data-drop-term="${term}" aria-label="${term}. dönem"><div class="semester-header"><div><span class="semester-year">${Math.ceil(term / 2)}. yıl / ${term % 2 ? "Güz" : "Bahar"}</span><h3>${term}. dönem ${term === state.profile.currentSemester ? '<span class="mini-badge">Bu dönem</span>' : ""}</h3></div><span class="semester-load">${cards.length} ders<br>${creditLoad} kredi</span></div><div class="semester-metrics"><span>Dönem <strong>${num(f?.major.semesterGpa)}</strong></span><span>GNO <strong>${num(f?.major.cumulativeGpa)}</strong></span>${state.profile.minorEnabled ? `<span>Yandal <strong>${num(f?.minor.cumulativeGpa)}</strong></span>` : ""}</div><div class="semester-course-list">${
+        shownCards
+          .map(
+            ({ c, actual: isActual, g }) =>
+              `<article class="semester-course ${isActual ? "recorded-course" : ""}" draggable="true" data-drag-course="${esc(c.id)}" data-drag-actual="${isActual}" data-original-term="${term}"><div class="planner-course-row"><span class="drag-handle" aria-hidden="true">⠿</span><div class="planner-course-info"><button class="planner-course-code" data-action="planner-course" data-id="${esc(c.id)}" data-actual="${isActual}">${esc(plannerCourseLabel(c))}</button><span class="planner-course-meta">${c.credits ? `${c.credits} kr.` : "Kredisiz"}${isActual ? " · Gerçek not" : state.transcript[c.id] ? ` · Tekrar (${state.transcript[c.id]})` : c.minor && !c.major ? " · Yandal" : ""}</span><p>${esc(c.name)}</p></div><div class="planner-course-grade">${
+                isActual
+                  ? gradeSelect(c.id, g, "actual", c.credits === 0)
+                  : entry(c.id).distribution
+                    ? `<button class="probability-chip" data-action="probability" data-id="${esc(c.id)}">Olasılık<br><strong>${num(
+                        Object.entries(entry(c.id).distribution).reduce(
+                          (sum, [grade, chance]) =>
+                            sum + (gradePoints[grade] * chance) / 100,
+                          0,
+                        ),
+                        2,
+                      )}</strong></button>`
+                    : gradeSelect(c.id, g, "plan", c.credits === 0)
+              }</div></div><div class="planner-course-footer"><button class="subtle-link" data-action="planner-course" data-id="${esc(c.id)}" data-actual="${isActual}">Detaylar ${icon("arrow")}</button><label class="move-label"><span class="sr-only">${esc(c.code)} ${isActual ? "gerçek" : "planlanan"} dersini taşı</span><select data-move-course="${esc(c.id)}" data-move-actual="${isActual}" aria-label="${esc(c.code)} ${isActual ? "gerçek" : "planlanan"} dönem">${Array.from({ length: last }, (_, j) => `<option value="${j + 1}" ${j + 1 === term ? "selected" : ""}>${j + 1}. döneme</option>`).join("")}</select></label></div></article>`,
+          )
+          .join("") ||
+        `<div class="semester-empty">${cards.length ? "Filtreye uygun ders yok." : "Dersleri buraya sürükle"}</div>`
+      }</div></section>`;
     })
     .join("")}</div>`;
 }
@@ -1218,6 +1358,17 @@ const actions = {
   },
   "bulk-grade": (el) => fillPredictions("remaining", el.dataset.gradeValue),
   "random-fill": randomDialog,
+  "planner-course": (el) =>
+    plannerCourseDialog(el.dataset.id, el.dataset.actual === "true"),
+  "planner-retake": (el) => plannerRetakeDialog(el.dataset.id),
+  "planner-exam": (el) => {
+    ui.examId = el.dataset.id;
+    go("exams");
+  },
+  "planner-clear": (el) => {
+    closeDialog();
+    actions["clear-plan"](el);
+  },
   "board-view": () => {
     ui.planView = "board";
     render();

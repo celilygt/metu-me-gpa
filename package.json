@@ -1,0 +1,13 @@
+{
+  "name": "metu-me-gpa",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A browser-local METU degree and scenario planner.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 -m http.server 8767 --bind 127.0.0.1",
+    "check": "node --check app.js && node --check engine.js && node --check state.js && node --check curriculum.js",
+    "build": "node scripts/build.mjs"
+  }
+}

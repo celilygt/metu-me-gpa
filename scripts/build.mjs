@@ -90,19 +90,19 @@ export async function build({
   const script = `(() => {\n'use strict';\nconst modules = Object.create(null);\n${modules.join("\n\n")}\n})();`;
   let standalone = replaceOnce(
     html,
-    /<link\s+rel="stylesheet"\s+href="style\.css"\s*\/?>/,
+    /<link\s+rel="stylesheet"\s+href="style\.css(?:\?[^"<>]*)?"\s*\/?>/,
     `<style>\n${css.replace(/<\/style/gi, "<\\/style")}\n</style>`,
     "local stylesheet",
   );
   standalone = replaceOnce(
     standalone,
-    /<script\s+type="module"\s+src="app\.js"\s*>\s*<\/script>/,
+    /<script\s+type="module"\s+src="app\.js(?:\?[^"<>]*)?"\s*>\s*<\/script>/,
     `<script>\n${script.replace(/<\/script/gi, "<\\/script")}\n</script>`,
     "app module",
   );
   standalone = replaceOnce(
     standalone,
-    /href="favicon\.svg"/,
+    /href="favicon\.svg(?:\?[^"<>]*)?"/,
     `href="data:image/svg+xml,${encodeURIComponent(favicon).replace(/'/g, "%27")}"`,
     "favicon",
   );

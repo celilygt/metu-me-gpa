@@ -12,7 +12,7 @@ test("portable build has one syntactically valid classic script and no local ass
     const { standalonePath, siteDir } = await build({ outputDir });
     const standalone = await readFile(standalonePath, "utf8");
     assert.doesNotMatch(standalone, /<script[^>]+(?:src=|type="module")/);
-    assert.doesNotMatch(standalone, /href="(?:style\.css|favicon\.svg)"/);
+    assert.doesNotMatch(standalone, /href="(?:style\.css|favicon\.svg)(?:\?[^"<>]*)?"/);
     assert.match(standalone, /href="data:image\/svg\+xml,/);
     const scripts = [...standalone.matchAll(/<script>([\s\S]*?)<\/script>/g)];
     assert.equal(scripts.length, 1);
@@ -21,7 +21,7 @@ test("portable build has one syntactically valid classic script and no local ass
       () => new vm.Script(scripts[0][1], { filename: "pusula.html" }),
     );
     const siteHtml = await readFile(path.join(siteDir, "index.html"), "utf8");
-    assert.match(siteHtml, /type="module" src="app\.js"/);
+    assert.match(siteHtml, /type="module" src="app\.js(?:\?[^"<>]*)?"/);
     for (const name of [
       "style.css",
       "app.js",
